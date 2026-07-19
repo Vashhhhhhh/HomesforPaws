@@ -1,0 +1,28 @@
+# ============================================================
+# PawsForward Backend — Python Dependencies
+# ============================================================
+# To install: pip install -r requirements.txt
+# ============================================================
+
+# --- Web Framework & Server ---
+fastapi==0.111.0          # The async web framework
+uvicorn[standard]==0.29.0 # ASGI server to RUN FastAPI
+
+# --- Database (Relational) ---
+sqlalchemy==2.0.30        # ORM: maps Python classes to DB tables
+# psycopg2-binary==2.9.9  # PostgreSQL adapter — PHASE 2: Install after PostgreSQL is set up
+#   NOTE: psycopg2-binary has no pre-built wheel for Python 3.14 yet.
+#   It requires PostgreSQL installed (pg_config) to compile from source.
+#   For Phase 1 dev, we use the SQLite fallback in main.py instead.
+alembic==1.13.1           # DB migration tool (schema versioning)
+
+# --- Data Validation ---
+pydantic==2.7.1           # Data validation & serialization (FastAPI uses this)
+pydantic-settings==2.2.1  # Settings management via .env files
+
+# --- Environment & Config ---
+python-dotenv==1.0.1      # Loads .env files into environment variables
+
+# --- Async Task Queue (Phase 3) ---
+celery==5.4.0             # Distributed task queue
+redis==5.0.4              # Redis client (Celery's broker & backend)

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>PawsForward — Smarter Pet Rehoming</title>
+    <meta
+        name="description"
+        content="PawsForward uses AI-powered semantic matching to connect pets with their ideal forever homes. No more rigid keyword filters."
+    />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- =========================================================
+         PHASE 1 SCAFFOLD
+         This is a minimal proof-of-concept shell.
+         The real UI gets built in Phase 2.
+
+         INTERN NOTE: Notice the semantic HTML elements —
+           <header>, <main>, <section>, <footer>.
+           These aren't just for looks. Screen readers, search
+           engines, and accessibility tools rely on these.
+           Never use <div> when a semantic element fits.
+    ========================================================= -->
+
+    <header id="site-header">
+        <div class="header-inner">
+            <h1 class="logo">🐾 PawsForward</h1>
+            <p class="tagline">Smarter pet rehoming through semantic matching</p>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+        <section id="api-status" class="status-card">
+            <h2>API Connection Status</h2>
+            <p>Checking backend connection...</p>
+            <div id="status-indicator" class="status-badge pending">
+                ● Connecting...
+            </div>
+        </section>
+
+        <section id="phase-info" class="info-card">
+            <h2>Phase 1 — Project Scaffold</h2>
+            <p>
+                The backend is alive. The database schema is defined.
+                The API contract is established. Phase 2 will wire up
+                the full CRUD layer and this UI.
+            </p>
+            <ul>
+                <li>✅ Directory structure enforced</li>
+                <li>✅ SQLAlchemy models defined</li>
+                <li>✅ Pydantic schemas defined</li>
+                <li>✅ FastAPI skeleton running</li>
+                <li>⏳ Phase 2: CRUD routes + Auth</li>
+                <li>⏳ Phase 3: Celery + ChromaDB</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer id="site-footer">
+        <p>PawsForward v0.1.0 — Phase 1 Scaffold</p>
+    </footer>
+
+    <!-- JavaScript is loaded LAST so the DOM is ready when it runs -->
+    <script src="app.js"></script>
+
+</body>
+</html>

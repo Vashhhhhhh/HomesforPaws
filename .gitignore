@@ -1,0 +1,43 @@
+# ============================================================
+# PawsForward — .gitignore
+# ============================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Environment Variables (NEVER commit secrets) ---
+.env
+*.env.local
+
+# --- Database (local dev SQLite fallback) ---
+*.db
+*.sqlite3
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Alembic (auto-generated) ---
+# alembic/versions/  ← DO commit migration files, they are versioned schema

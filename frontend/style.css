@@ -1,0 +1,192 @@
+/* ============================================================
+   PawsForward — Phase 1 Stylesheet
+   ============================================================
+   Phase 1 is minimal but purposeful.
+   We establish the design tokens (colors, fonts, spacing) now
+   so Phase 2 UI components have a system to plug into.
+
+   INTERN NOTE: CSS Custom Properties (variables) defined on :root
+   are your design system. Every color, every spacing value should
+   come from here — never magic numbers scattered through the file.
+   When the brand color changes, you change ONE line, not 50.
+============================================================ */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS (CSS Custom Properties)
+============================================================ */
+:root {
+    /* Color Palette */
+    --color-bg-primary:    #0f1117;
+    --color-bg-secondary:  #1a1d27;
+    --color-bg-card:       #1e2130;
+    --color-border:        #2a2e45;
+    --color-accent-primary: #6c63ff;
+    --color-accent-secondary: #a78bfa;
+    --color-text-primary:  #f0f0f5;
+    --color-text-secondary: #8b8fa8;
+    --color-success:       #22c55e;
+    --color-warning:       #f59e0b;
+    --color-danger:        #ef4444;
+
+    /* Typography */
+    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-size-base: 16px;
+
+    /* Spacing Scale */
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  16px;
+    --space-lg:  24px;
+    --space-xl:  48px;
+
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+}
+
+/* ============================================================
+   HEADER
+============================================================ */
+#site-header {
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-lg) var(--space-xl);
+    background: linear-gradient(135deg, #1a1d27 0%, #12141e 100%);
+}
+
+.header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-accent-secondary);
+    letter-spacing: -0.5px;
+}
+
+.tagline {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-top: var(--space-xs);
+}
+
+/* ============================================================
+   MAIN CONTENT
+============================================================ */
+#main-content {
+    flex: 1;
+    max-width: 900px;
+    margin: var(--space-xl) auto;
+    padding: 0 var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    width: 100%;
+}
+
+/* ============================================================
+   CARDS
+============================================================ */
+.status-card,
+.info-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+}
+
+.status-card h2,
+.info-card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-md);
+}
+
+.info-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+.info-card li {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   STATUS BADGE
+============================================================ */
+.status-badge {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-lg);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: var(--space-sm);
+    transition: all var(--transition-base);
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-warning);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-badge.connected {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--color-success);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-badge.error {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+#site-footer {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-md) var(--space-xl);
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}

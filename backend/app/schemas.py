@@ -19,10 +19,9 @@ Naming Convention (Pattern to memorize):
   *Response → What we RETURN to the client (GET response)
 """
 
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional
 from .models import VerificationStatus
-
 
 # ============================================================
 # USER SCHEMAS
@@ -93,22 +92,10 @@ class PetCreate(BaseModel):
     name: str
     description: Optional[str] = None
     owner_id: int  # TODO Phase 2: derive from JWT token, remove from body
-    vet_certificate_url: str
-    health_records_url: str
+    vet_certificate_toggle: bool
+    health_records_toggle: bool
+    has_picture_uploaded: bool
 
-    @field_validator("vet_certificate_url", "health_records_url")
-    @classmethod
-    def url_must_not_be_empty(cls, v: str) -> str:
-        """
-        INTERN NOTE: This is a Pydantic field validator.
-        It runs BEFORE the data reaches the route handler.
-        If it raises ValueError, Pydantic returns a 422 Unprocessable
-        Entity automatically. The route handler never even fires.
-        This is defense-in-depth — validate early, fail fast.
-        """
-        if not v or not v.strip():
-            raise ValueError("Document URL cannot be empty")
-        return v.strip()
 
 
 class PetResponse(BaseModel):
@@ -121,10 +108,11 @@ class PetResponse(BaseModel):
     name: str
     description: Optional[str]
     owner_id: int
-    vet_certificate_url: str
-    health_records_url: str
-    is_health_verified: VerificationStatus
+    vet_certificate_toggle: bool
+    health_records_toggle: bool
+    is_health_verified: bool
     is_eligible_for_matching: bool
+    has_picture_uploaded: bool
 
     model_config = {"from_attributes": True}
 
@@ -138,3 +126,41 @@ class HealthCheckResponse(BaseModel):
     status: str
     version: str
     message: str
+
+class AdopterSurvey(BaseModel):
+    name: str = Field(..., min_length=1, max_length=50)
+    email: str = Field(...)
+    housing_type: str = Field(..., examples=["Duplex", "Detached"])
+    has_other_pets: bool = Field(default=False)
+    lifestyle_description: str = Field(
+        ...,
+        min_length=150,
+        max_length=1000,
+        examples=["I live in a quiet suburban neighborhood with a large fenced yard. I work from home two days a week and am looking for a medium-sized dog that enjoys walks and playtime. I have previous experience owning dogs and am committed to providing a loving and stable environment."]
+    )
+
+
+class AdopterSurveyResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    housing_type: str
+    has_other_pets: bool
+    lifestyle_description: str
+
+    model_config = {"from_attributes": True}
+
+
+# ============================================================
+# RECOMMENDATION SCHEMAS (Phase 1.3)
+# ============================================================
+
+class MatchRequest(BaseModel):
+    """Input for the semantic matching endpoint."""
+    survey_id: int
+
+
+class MatchResult(BaseModel):
+    """A single pet match result with its similarity score."""
+    pet: PetResponse
+    similarity_score: float  # 0.0 to 1.0, higher = better match

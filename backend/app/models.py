@@ -10,6 +10,7 @@ Architecture Notes:
 - The Pydantic schemas in schemas.py handle the API contract.
 """
 
+from sqlalchemy import Boolean
 import enum
 from sqlalchemy import (
     Column,
@@ -138,16 +139,16 @@ class Pet(Base):
 
     # --- Compliance Documents (REQUIRED, not nullable) ---
     # Per GEMINI.md: both are required for health verification.
-    vet_certificate_url = Column(String, nullable=False)
-    health_records_url = Column(String, nullable=False)
+    vet_certificate_toggle = Column(Boolean, nullable=True)
+    health_records_toggle = Column(Boolean, nullable=True)
+    has_picture_uploaded = Column(Boolean, nullable=False, default=False)
 
     # --- FAIL-SAFE FLAG #1: Health Document Verification State ---
     # Controls whether docs have been reviewed and approved.
     is_health_verified = Column(
-        SAEnum(VerificationStatus),
+        Boolean,
         nullable=False,
-        default=VerificationStatus.PENDING,
-        server_default=VerificationStatus.PENDING.value,
+        default=False
     )
 
     # --- FAIL-SAFE FLAG #2: Matching Engine Circuit Breaker ---
@@ -165,3 +166,26 @@ class Pet(Base):
             f"health={self.is_health_verified} "
             f"eligible={self.is_eligible_for_matching}>"
         )
+
+
+# ============================================================
+# ADOPTER SURVEY MODEL
+# ============================================================
+# Stores the adopter intake survey submitted via the frontend form.
+#
+# No foreign key to users yet — adopters are anonymous in Phase 1.
+# In Phase 2, when JWT auth is added, this will link to users.id
+# so we can associate a survey with a verified adopter account.
+# ============================================================
+class AdopterSurvey(Base):
+    __tablename__ = "adopter_surveys"
+
+    id                    = Column(Integer, primary_key=True, index=True)
+    name                  = Column(String, nullable=False)
+    email                 = Column(String, nullable=False, index=True)
+    housing_type          = Column(String, nullable=False)
+    has_other_pets        = Column(Boolean, nullable=False, default=False)
+    lifestyle_description = Column(Text, nullable=False)
+
+    def __repr__(self) -> str:
+        return f"<AdopterSurvey id={self.id} email={self.email}>"

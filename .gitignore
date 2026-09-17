@@ -39,5 +39,9 @@ Thumbs.db
 *.log
 logs/
 
+# --- HuggingFace & ChromaDB Data ---
+**/.hf_cache/
+**/chroma_data/
+
 # --- Alembic (auto-generated) ---
 # alembic/versions/  ← DO commit migration files, they are versioned schema

@@ -1,75 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO -->
     <title>PawsForward — Smarter Pet Rehoming</title>
-    <meta
-        name="description"
-        content="PawsForward uses AI-powered semantic matching to connect pets with their ideal forever homes. No more rigid keyword filters."
-    />
+    <meta name="description"
+        content="PawsForward uses AI-powered semantic matching to connect pets with their ideal forever homes. No more rigid keyword filters." />
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
     <!-- =========================================================
-         PHASE 1 SCAFFOLD
-         This is a minimal proof-of-concept shell.
-         The real UI gets built in Phase 2.
-
-         INTERN NOTE: Notice the semantic HTML elements —
-           <header>, <main>, <section>, <footer>.
-           These aren't just for looks. Screen readers, search
-           engines, and accessibility tools rely on these.
-           Never use <div> when a semantic element fits.
+         HIDDEN NAV BAR — slides down on hover via tab trigger
     ========================================================= -->
-
-    <header id="site-header">
-        <div class="header-inner">
-            <h1 class="logo">🐾 PawsForward</h1>
-            <p class="tagline">Smarter pet rehoming through semantic matching</p>
-        </div>
-    </header>
-
-    <main id="main-content">
-
-        <section id="api-status" class="status-card">
-            <h2>API Connection Status</h2>
-            <p>Checking backend connection...</p>
-            <div id="status-indicator" class="status-badge pending">
-                ● Connecting...
+    <div class="nav-wrapper" id="nav-wrapper">
+        <nav class="nav-bar">
+            <div class="nav-inner">
+                <a href="#hero" class="nav-logo">Paws<span>Forward</span></a>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#browse-pets">Browse Pets</a></li>
+                    <li><a href="#list-pet">List a Pet</a></li>
+                    <li><a href="#adopter-survey">Adopter Survey</a></li>
+                    <li><a href="#match-results">Find Your Match</a></li>
+                </ul>
             </div>
-        </section>
+        </nav>
+        <div class="nav-tab" id="nav-tab">Menu</div>
+    </div>
 
-        <section id="phase-info" class="info-card">
-            <h2>Phase 1 — Project Scaffold</h2>
-            <p>
-                The backend is alive. The database schema is defined.
-                The API contract is established. Phase 2 will wire up
-                the full CRUD layer and this UI.
+    <!-- =========================================================
+         HERO SECTION
+    ========================================================= -->
+    <section class="hero" id="hero">
+        <div class="hero-content fade-in">
+            <h1>Every Pet Deserves a <span class="highlight">Loving Home</span></h1>
+            <p class="hero-subtitle">
+                PawsForward uses AI-powered semantic matching to connect pets
+                with compatible adopters. No rigid filters — just meaningful connections.
             </p>
-            <ul>
-                <li>✅ Directory structure enforced</li>
-                <li>✅ SQLAlchemy models defined</li>
-                <li>✅ Pydantic schemas defined</li>
-                <li>✅ FastAPI skeleton running</li>
-                <li>⏳ Phase 2: CRUD routes + Auth</li>
-                <li>⏳ Phase 3: Celery + ChromaDB</li>
-            </ul>
-        </section>
+            <div class="hero-actions">
+                <a href="#adopter-survey" class="btn btn-primary">I Want to Adopt</a>
+                <a href="#list-pet" class="btn btn-secondary">List a Pet</a>
+            </div>
+        </div>
+    </section>
 
-    </main>
+    <!-- =========================================================
+         BROWSE PETS — Displays pet cards from GET /api/v1/pets
+    ========================================================= -->
+    <section class="section section-alt" id="browse-pets">
+        <div class="fade-in">
+            <h2 class="section-title">Pets Looking for Homes</h2>
+            <p class="section-subtitle">Meet the pets currently available for rehoming.</p>
+            <hr class="section-divider" />
+        </div>
 
-    <footer id="site-footer">
-        <p>PawsForward v0.1.0 — Phase 1 Scaffold</p>
+        <div class="pet-grid" id="pet-grid">
+            <!-- Pet cards rendered by JavaScript -->
+            <div class="empty-state" id="pet-empty-state">
+                <div class="empty-state-icon">🐾</div>
+                <p>No pets listed yet. Be the first to submit a pet profile.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--space-lg);">
+            <button class="btn btn-secondary btn-sm" id="refresh-pets-btn">Refresh Pet List</button>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         LIST A PET — Form submits to POST /api/v1/pets
+    ========================================================= -->
+    <section class="section" id="list-pet">
+        <div class="fade-in">
+            <h2 class="section-title">List a Pet for Rehoming</h2>
+            <p class="section-subtitle">Submit a pet profile so adopters can find your furry (or scaly!) friend through
+                our matching engine.</p>
+            <hr class="section-divider" />
+        </div>
+
+        <div class="form-wrapper fade-in">
+            <form id="pet-listing-form" novalidate>
+
+                <div class="form-group">
+                    <label for="pet-name">Pet Name</label>
+                    <input type="text" id="pet-name" name="name" class="form-input" required maxlength="100"
+                        placeholder="e.g. Bella, Max, Luna" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pet-owner-id">Owner ID</label>
+                    <input type="number" id="pet-owner-id" name="owner_id" class="form-input" required min="1"
+                        placeholder="Your user ID (e.g. 1)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="pet-description">Description</label>
+                    <textarea id="pet-description" name="description" class="form-input" rows="4" maxlength="2000"
+                        placeholder="Describe the pet's breed, temperament, activity level, and any special needs..."></textarea>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label-text">Picture Uploaded</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pet-picture-uploaded" name="has_picture_uploaded" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label-text">Vet Certificate</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pet-vet-certificate" name="vet_certificate_toggle" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label-text">Health Records</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pet-health-records" name="health_records_toggle" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-pet-btn"
+                    style="width: 100%; margin-top: var(--space-md);">
+                    Submit Pet Profile
+                </button>
+
+                <div class="form-message" id="pet-message" aria-live="polite"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         ADOPTER SURVEY — Form submits to POST /api/v1/surveys/adopter
+    ========================================================= -->
+    <section class="section section-green" id="adopter-survey">
+        <div class="fade-in">
+            <h2 class="section-title">Adopter Survey</h2>
+            <p class="section-subtitle">Tell us about yourself, your home, and the kind of companion you're looking for.
+            </p>
+            <hr class="section-divider" />
+        </div>
+
+        <div class="form-wrapper fade-in">
+            <form id="adopter-survey-form" novalidate>
+
+                <div class="form-group">
+                    <label for="survey-name">Full Name</label>
+                    <input type="text" id="survey-name" name="name" class="form-input" required minlength="1"
+                        maxlength="50" placeholder="Your full name" />
+                </div>
+
+                <div class="form-group">
+                    <label for="survey-email">Email Address</label>
+                    <input type="email" id="survey-email" name="email" class="form-input" required
+                        placeholder="you@example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="survey-housing-type">Housing Type</label>
+                    <select id="survey-housing-type" name="housing_type" class="form-input" required>
+                        <option value="" disabled selected>Select your housing type</option>
+                        <option value="Detached">Detached House</option>
+                        <option value="Duplex">Duplex</option>
+                        <option value="Townhouse">Townhouse</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Condo">Condo</option>
+                    </select>
+                </div>
+
+                <div class="toggle-row">
+                    <span class="toggle-label-text">Do you currently have other pets?</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="survey-has-other-pets" name="has_other_pets" />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="survey-lifestyle">Lifestyle Description</label>
+                    <textarea id="survey-lifestyle" name="lifestyle_description" class="form-input" rows="6" required
+                        minlength="150" maxlength="1000"
+                        placeholder="Describe your home environment, daily routine, activity level, and experience with pets (min. 150 characters)..."></textarea>
+                    <span class="char-count" id="lifestyle-char-count">0 / 1000</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submit-survey-btn" style="width: 100%;">
+                    Submit Survey
+                </button>
+
+                <div class="form-message" id="survey-message" aria-live="polite"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         MATCH RESULTS — Semantic matching via POST /api/v1/recommendations/match
+    ========================================================= -->
+    <section class="section section-alt" id="match-results">
+        <div class="fade-in">
+            <h2 class="section-title">Find Your Match</h2>
+            <p class="section-subtitle">Select a submitted survey to find the most compatible pets using AI-powered
+                semantic matching.</p>
+            <hr class="section-divider" />
+        </div>
+
+        <div class="match-controls fade-in">
+            <div class="form-group">
+                <label for="match-survey-select">Select Survey</label>
+                <select id="match-survey-select" class="form-input">
+                    <option value="" disabled selected>Loading surveys...</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" id="run-match-btn">Find Matches</button>
+        </div>
+
+        <div class="match-results-grid" id="match-results-grid">
+            <!-- Match result cards rendered by JavaScript -->
+        </div>
+
+        <div class="empty-state" id="match-empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <p>Submit a survey and activate some pets, then run the match engine to see results here.</p>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+    <footer class="site-footer">
+        <p><strong>PawsForward</strong> v0.2.0 — Phase 2</p>
+        <p style="margin-top: var(--space-xs);">AI-powered pet rehoming. Built with care.</p>
     </footer>
 
-    <!-- JavaScript is loaded LAST so the DOM is ready when it runs -->
+    <!-- =========================================================
+         API STATUS INDICATOR (fixed bottom-right)
+    ========================================================= -->
+    <div class="status-indicator" id="status-indicator">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Checking API...</span>
+    </div>
+
+    <!-- JavaScript loaded last -->
     <script src="app.js"></script>
 
 </body>
+
 </html>
